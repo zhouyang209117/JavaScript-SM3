@@ -317,7 +317,7 @@ function CF(V, Bi) {
 }
 
 /**
- * sm3 hash算法 http://www.oscca.gov.cn/News/201012/News_1199.htm
+ * sm3 hash算法 https://sca.gov.cn/sca/xwdt/2010-12/17/content_1002389.shtml
  * @param {string|Buffer} content 输入string或Buffer
  * @returns {string} 返回经过sm3算法的hash
  */
