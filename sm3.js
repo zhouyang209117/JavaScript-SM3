@@ -12,13 +12,22 @@
  */
 
 
-// 左补0到指定长度
+/**
+ * 左补0到指定长度
+ * @param {string} str 
+ * @param {number} totalLength 
+ * @returns 
+ */
 function leftPad(str, totalLength) {
   const len = str.length;
   return Array(totalLength > len ? ((totalLength - len) + 1) : 0).join(0) + str;
 }
 
-// 二进制转化为十六进制
+/**
+ * 二进制转化为十六进制
+ * @param {string} binary 
+ * @returns 
+ */
 function binary2hex(binary) {
   const binaryLength = 8;
   let hex = '';
@@ -28,7 +37,11 @@ function binary2hex(binary) {
   return hex;
 }
 
-// 十六进制转化为二进制
+/**
+ * 十六进制转化为二进制
+ * @param {string} hex 
+ * @returns 
+ */
 function hex2binary(hex) {
   const hexLength = 2;
   let binary = '';
@@ -38,7 +51,11 @@ function hex2binary(hex) {
   return binary;
 }
 
-// utf16码点值转化为utf8二进制
+/**
+ * utf16码点值转化为utf8二进制
+ * @param {*} ch 
+ * @returns 
+ */
 function utf16CodePoint2utf8Binary(ch) {
   const utf8Arr = [];
   const codePoint = ch.codePointAt(0);
@@ -69,7 +86,11 @@ function utf16CodePoint2utf8Binary(ch) {
   return binary;
 }
 
-// 普通字符串转化为二进制
+/**
+ * 普通字符串转化为二进制
+ * @param {string} str 
+ * @returns 
+ */
 function str2binary(str) {
   let binary = '';
   for (const ch of str) {
@@ -78,12 +99,23 @@ function str2binary(str) {
   return binary;
 }
 
-// 循环左移
+/**
+ * 循环左移
+ * @param {*} str 
+ * @param {*} n 
+ * @returns 
+ */
 function rol(str, n) {
   return str.substring(n % str.length) + str.substr(0, n % str.length);
 }
 
-// 二进制运算
+/**
+ * 二进制运算
+ * @param {*} x 
+ * @param {*} y 
+ * @param {*} method 
+ * @returns 
+ */
 function binaryCal(x, y, method) {
   const a = x || '';
   const b = y || '';
@@ -98,22 +130,42 @@ function binaryCal(x, y, method) {
   return result.join('');
 }
 
-// 二进制异或运算
+/**
+ * 二进制异或运算
+ * @param {*} x 
+ * @param {*} y 
+ * @returns 
+ */
 function xor(x, y) {
   return binaryCal(x, y, (a, b) => [(a === b ? '0' : '1')]);
 }
 
-// 二进制与运算
+/**
+ * 二进制与运算
+ * @param {*} x 
+ * @param {*} y 
+ * @returns 
+ */
 function and(x, y) {
   return binaryCal(x, y, (a, b) => [(a === '1' && b === '1' ? '1' : '0')]);
 }
 
-// 二进制或运算
+/**
+ * 二进制或运算
+ * @param {*} x 
+ * @param {*} y 
+ * @returns 
+ */
 function or(x, y) {
   return binaryCal(x, y, (a, b) => [(a === '1' || b === '1' ? '1' : '0')]);// a === '0' && b === '0' ? '0' : '1'
 }
 
-// 二进制与运算
+/**
+ * 二进制与运算
+ * @param {*} x 
+ * @param {*} y 
+ * @returns 
+ */
 function add(x, y) {
   const result = binaryCal(x, y, (a, b, prevResult) => {
     const carry = prevResult ? prevResult[1] : '0' || '0';
@@ -125,7 +177,11 @@ function add(x, y) {
   return result;
 }
 
-// 二进制非运算
+/**
+ * 二进制非运算
+ * @param {*} x 
+ * @returns 
+ */
 function not(x) {
   return binaryCal(x, undefined, a => [a === '1' ? '0' : '1']);
 }
@@ -138,32 +194,63 @@ function calMulti(method) {
 //   return arr.reduce((prev, curr) => xor(prev, curr));
 // }
 
-// 压缩函数中的置换函数 P1(X) = X xor (X <<< 9) xor (X <<< 17)
+/**
+ * 压缩函数中的置换函数 P1(X) = X xor (X <<< 9) xor (X <<< 17)
+ * @param {*} X 
+ * @returns 
+ */
 function P0(X) {
   return calMulti(xor)(X, rol(X, 9), rol(X, 17));
 }
 
-// 消息扩展中的置换函数 P1(X) = X xor (X <<< 15) xor (X <<< 23)
+/**
+ * 消息扩展中的置换函数 P1(X) = X xor (X <<< 15) xor (X <<< 23)
+ * @param {*} X 
+ * @returns 
+ */
 function P1(X) {
   return calMulti(xor)(X, rol(X, 15), rol(X, 23));
 }
 
-// 布尔函数，随j的变化取不同的表达式
+/**
+ * 布尔函数，随j的变化取不同的表达式
+ * @param {*} X 
+ * @param {*} Y 
+ * @param {*} Z 
+ * @param {*} j 
+ * @returns 
+ */
 function FF(X, Y, Z, j) {
   return j >= 0 && j <= 15 ? calMulti(xor)(X, Y, Z) : calMulti(or)(and(X, Y), and(X, Z), and(Y, Z));
 }
 
-// 布尔函数，随j的变化取不同的表达式
+/**
+ * 布尔函数，随j的变化取不同的表达式
+ * @param {*} X 
+ * @param {*} Y 
+ * @param {*} Z 
+ * @param {*} j 
+ * @returns 
+ */
 function GG(X, Y, Z, j) {
   return j >= 0 && j <= 15 ? calMulti(xor)(X, Y, Z) : or(and(X, Y), and(not(X), Z));
 }
 
-// 常量，随j的变化取不同的值
+/**
+ * 常量，随j的变化取不同的值
+ * @param {*} j 
+ * @returns 
+ */
 function T(j) {
   return j >= 0 && j <= 15 ? hex2binary('79cc4519') : hex2binary('7a879d8a');
 }
 
-// 压缩函数
+/**
+ * 压缩函数
+ * @param {string} V 
+ * @param {string} Bi 
+ * @returns 
+ */
 function CF(V, Bi) {
   // 消息扩展
   const wordLength = 32;
@@ -229,22 +316,27 @@ function CF(V, Bi) {
   return xor(Array(A, B, C, D, E, F, G, H).join(''), V);
 }
 
-// sm3 hash算法 http://www.oscca.gov.cn/News/201012/News_1199.htm
+/**
+ * sm3 hash算法 http://www.oscca.gov.cn/News/201012/News_1199.htm
+ * @param {string|Buffer} content 输入string或Buffer
+ * @returns {string} 返回经过sm3算法的hash
+ */
 function sm3(content) {
-  let binary = ""
-  if (typeof content == 'string') {
-    binary = str2binary(content);
-  } else {
+  let binary = '';
+  if (typeof Buffer !== 'undefined' && Buffer.isBuffer(content)) {
     for (a of content) {
-      binary += a.toString(2).padStart(8, "0")
+      binary += a.toString(2).padStart(8, '0');
     }
+  }
+  else {
+    binary = str2binary(content);
   }
   // 填充
   const len = binary.length;
   // k是满足len + 1 + k = 448mod512的最小的非负整数
   let k = len % 512;
   // 如果 448 <= (512 % len) < 512，需要多补充 (len % 448) 比特'0'以满足总比特长度为512的倍数
-  k = k >= 448 ? 512 - (k % 448) - 1: 448 - k - 1;
+  k = k >= 448 ? 512 - (k % 448) - 1 : 448 - k - 1;
   const m = `${binary}1${leftPad('', k)}${leftPad(len.toString(2), 64)}`.toString();// k个0
 
   // 迭代压缩
