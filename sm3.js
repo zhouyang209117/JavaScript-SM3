@@ -3,6 +3,7 @@
  * https://github.com/jiaxingzheng/JavaScript-SM3
  *
  * Copyright 2017, Zheng Jiaxing
+ * Edit 2021, Jo Young, Sonic853
  *
  * Licensed under the MIT license:
  * http://www.opensource.org/licenses/MIT
@@ -16,7 +17,7 @@
    * 左补0到指定长度
    * @param {string} str 
    * @param {number} totalLength 
-   * @returns 
+   * @returns {string}
    */
   function leftPad(str, totalLength) {
     const len = str.length;
@@ -26,7 +27,7 @@
   /**
    * 二进制转化为十六进制
    * @param {string} binary 
-   * @returns 
+   * @returns {string}
    */
   function binary2hex(binary) {
     const binaryLength = 8;
@@ -40,7 +41,7 @@
   /**
    * 十六进制转化为二进制
    * @param {string} hex 
-   * @returns 
+   * @returns {string}
    */
   function hex2binary(hex) {
     const hexLength = 2;
@@ -53,8 +54,8 @@
 
   /**
    * utf16码点值转化为utf8二进制
-   * @param {*} ch 
-   * @returns 
+   * @param {string} ch 
+   * @returns {string}
    */
   function utf16CodePoint2utf8Binary(ch) {
     const utf8Arr = [];
@@ -89,7 +90,7 @@
   /**
    * 普通字符串转化为二进制
    * @param {string} str 
-   * @returns 
+   * @returns {string}
    */
   function str2binary(str) {
     let binary = '';
@@ -101,9 +102,9 @@
 
   /**
    * 循环左移
-   * @param {*} str 
-   * @param {*} n 
-   * @returns 
+   * @param {string} str 
+   * @param {number} n 
+   * @returns {string}
    */
   function rol(str, n) {
     return str.substring(n % str.length) + str.substr(0, n % str.length);
@@ -111,10 +112,10 @@
 
   /**
    * 二进制运算
-   * @param {*} x 
-   * @param {*} y 
-   * @param {*} method 
-   * @returns 
+   * @param {string} x 
+   * @param {string} y 
+   * @param {Function} method 
+   * @returns {string}
    */
   function binaryCal(x, y, method) {
     const a = x || '';
@@ -132,9 +133,9 @@
 
   /**
    * 二进制异或运算
-   * @param {*} x 
-   * @param {*} y 
-   * @returns 
+   * @param {string} x 
+   * @param {string} y 
+   * @returns {string}
    */
   function xor(x, y) {
     return binaryCal(x, y, (a, b) => [(a === b ? '0' : '1')]);
@@ -142,9 +143,9 @@
 
   /**
    * 二进制与运算
-   * @param {*} x 
-   * @param {*} y 
-   * @returns 
+   * @param {string} x 
+   * @param {string} y 
+   * @returns {string}
    */
   function and(x, y) {
     return binaryCal(x, y, (a, b) => [(a === '1' && b === '1' ? '1' : '0')]);
@@ -152,9 +153,9 @@
 
   /**
    * 二进制或运算
-   * @param {*} x 
-   * @param {*} y 
-   * @returns 
+   * @param {string} x 
+   * @param {string} y 
+   * @returns {string}
    */
   function or(x, y) {
     return binaryCal(x, y, (a, b) => [(a === '1' || b === '1' ? '1' : '0')]);// a === '0' && b === '0' ? '0' : '1'
@@ -162,9 +163,9 @@
 
   /**
    * 二进制与运算
-   * @param {*} x 
-   * @param {*} y 
-   * @returns 
+   * @param {string} x 
+   * @param {string} y 
+   * @returns {string}
    */
   function add(x, y) {
     const result = binaryCal(x, y, (a, b, prevResult) => {
@@ -179,13 +180,18 @@
 
   /**
    * 二进制非运算
-   * @param {*} x 
-   * @returns 
+   * @param {string} x 
+   * @returns {string}
    */
   function not(x) {
     return binaryCal(x, undefined, a => [a === '1' ? '0' : '1']);
   }
 
+  /**
+   * 
+   * @param {Function} method 
+   * @returns 
+   */
   function calMulti(method) {
     return (...arr) => arr.reduce((prev, curr) => method(prev, curr));
   }
@@ -196,8 +202,8 @@
 
   /**
    * 压缩函数中的置换函数 P1(X) = X xor (X <<< 9) xor (X <<< 17)
-   * @param {*} X 
-   * @returns 
+   * @param {string} X 
+   * @returns {string}
    */
   function P0(X) {
     return calMulti(xor)(X, rol(X, 9), rol(X, 17));
@@ -205,8 +211,8 @@
 
   /**
    * 消息扩展中的置换函数 P1(X) = X xor (X <<< 15) xor (X <<< 23)
-   * @param {*} X 
-   * @returns 
+   * @param {string} X 
+   * @returns {string}
    */
   function P1(X) {
     return calMulti(xor)(X, rol(X, 15), rol(X, 23));
@@ -214,11 +220,11 @@
 
   /**
    * 布尔函数，随j的变化取不同的表达式
-   * @param {*} X 
-   * @param {*} Y 
-   * @param {*} Z 
-   * @param {*} j 
-   * @returns 
+   * @param {string} X 
+   * @param {string} Y 
+   * @param {string} Z 
+   * @param {number} j 
+   * @returns {string}
    */
   function FF(X, Y, Z, j) {
     return j >= 0 && j <= 15 ? calMulti(xor)(X, Y, Z) : calMulti(or)(and(X, Y), and(X, Z), and(Y, Z));
@@ -226,11 +232,11 @@
 
   /**
    * 布尔函数，随j的变化取不同的表达式
-   * @param {*} X 
-   * @param {*} Y 
-   * @param {*} Z 
-   * @param {*} j 
-   * @returns 
+   * @param {string} X 
+   * @param {string} Y 
+   * @param {string} Z 
+   * @param {number} j 
+   * @returns {string}
    */
   function GG(X, Y, Z, j) {
     return j >= 0 && j <= 15 ? calMulti(xor)(X, Y, Z) : or(and(X, Y), and(not(X), Z));
@@ -238,8 +244,8 @@
 
   /**
    * 常量，随j的变化取不同的值
-   * @param {*} j 
-   * @returns 
+   * @param {number} j 
+   * @returns {string}
    */
   function T(j) {
     return j >= 0 && j <= 15 ? hex2binary('79cc4519') : hex2binary('7a879d8a');
@@ -249,7 +255,7 @@
    * 压缩函数
    * @param {string} V 
    * @param {string} Bi 
-   * @returns 
+   * @returns {string}
    */
   function CF(V, Bi) {
     // 消息扩展
@@ -351,4 +357,4 @@
   }
   if (typeof module !== 'undefined' && typeof module.exports !== 'undefined') module.exports = sm3;
   else window.sm3 = sm3;
-})()
+})();
