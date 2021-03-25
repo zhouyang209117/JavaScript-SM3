@@ -1,0 +1,37 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0,minimal-ui:ios">
+    <title>JavaScript SM3</title>
+</head>
+
+<body>
+    <input type="text" name="text" id="inputText"><button id="SubmitText">生成</button><br>
+    <input type="file" id="inputFile" /><br>
+    SM3结果：<span id="SM3Text"></span>
+    <script type="application/javascript" src="sm3.js"></script>
+    <script>
+        let inputText = document.getElementById("inputText");
+        let SubmitText = document.getElementById("SubmitText");
+        let SM3Text = document.getElementById("SM3Text");
+        SubmitText.onclick = () => {
+            SM3Text.innerText = sm3(inputText.value);
+        }
+
+        let inputFile = document.getElementById("inputFile");
+        inputFile.onchange = () => {
+            let reader = new FileReader();
+            reader.onload = () => {
+                // let arrayBuffer = reader.result;
+                let array = new Uint8Array(reader.result);
+                SM3Text.innerText = sm3(array);
+            }
+            if(inputFile.files.length !== 0) reader.readAsArrayBuffer(inputFile.files[0]);
+        }
+    </script>
+</body>
+
+</html>
