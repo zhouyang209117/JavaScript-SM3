@@ -324,12 +324,12 @@
 
   /**
    * sm3 hash算法 https://sca.gov.cn/sca/xwdt/2010-12/17/content_1002389.shtml
-   * @param {string|Buffer} content 输入string或Buffer
+   * @param {string|Buffer|Uint8Array} content 输入string、Buffer或Uint8Array
    * @returns {string} 返回经过sm3算法的hash
    */
   function sm3(content) {
     let binary = '';
-    if (typeof Buffer !== 'undefined' && Buffer.isBuffer(content)) {
+    if ((typeof Buffer !== 'undefined' && Buffer.isBuffer(content))||(typeof Uint8Array !== 'undefined' && content instanceof Object.getPrototypeOf(Uint8Array))) {
       for (a of content) {
         binary += a.toString(2).padStart(8, '0');
       }

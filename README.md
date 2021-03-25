@@ -1,7 +1,7 @@
 # JavaScript SM3
 
 ## 简介
-国密SM3密码杂凑算法的JavaScript实现。目前只能在服务器端环境Node.js使用。
+国密SM3密码杂凑算法的JavaScript实现。目前可在服务器端环境Node.js以及浏览器环境使用。
 
 ## 使用
 直接下载源代码将sm3.js拷贝到你的项目中，或者使用[npm](https://www.npmjs.org/)安装：
